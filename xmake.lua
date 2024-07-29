@@ -7,9 +7,12 @@ set_languages("c99")
 add_repositories("local-repo third_party_repo")
 add_requires("libevent 2.2.6")
 
-target("libevent_http_serve")
+target("example")
     set_kind("binary")
-    add_files("src/*.c")
+    add_files("src/shared/*.c")
+    add_files("src/example.c")
+    add_syslinks("pthread")
+    add_packages("libevent")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
