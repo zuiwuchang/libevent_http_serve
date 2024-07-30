@@ -2539,6 +2539,7 @@ static int ppp_c_flags_next_flags_set_value(ppp_c_flags_execute_args_t *args, st
             printf("Error: flag needs an argument: --%s\n", flag->_name);
         }
         ppp_c_flags_print_usage(args->command);
+        args->err = PPP_C_FLAGS_ERROR_INVALID_ARGUMENT;
         return 1;
     }
     args->s = args->argv[args->i + 1];
@@ -2554,6 +2555,7 @@ static int ppp_c_flags_next_flags_set_value(ppp_c_flags_execute_args_t *args, st
             printf("Error: invalid argument for --%s: %s\n", flag->_name, args->s);
         }
         ppp_c_flags_print_usage(args->command);
+        args->err = PPP_C_FLAGS_ERROR_INVALID_ARGUMENT;
         return 1;
     }
     args->i += 2;
@@ -2589,6 +2591,7 @@ static int ppp_c_flags_next_flags_set(ppp_c_flags_execute_args_t *args, struct p
             printf("Error: invalid argument for --%s: %s\n", flag->_name, args->s);
         }
         ppp_c_flags_print_usage(args->command);
+        args->err = PPP_C_FLAGS_ERROR_INVALID_ARGUMENT;
         return 1;
     }
     args->i++;

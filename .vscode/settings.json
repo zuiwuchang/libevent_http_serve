@@ -3,6 +3,9 @@
         "*.json": "jsonc",
         "listener.h": "c",
         "typeinfo": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "flags.h": "c",
+        "shared.h": "c",
+        "bufferevent.h": "c"
     }
 }

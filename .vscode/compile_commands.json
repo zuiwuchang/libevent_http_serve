@@ -11,6 +11,11 @@
 },
 {
   "directory": "/home/dev/project/cc/libevent_http_serve",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/.xmake/packages/l/libevent/2.2.6/435f6458bdb5473687630c17c24f4f21/include", "-I", "/home/dev/.xmake/packages/m/mbedtls/v3.6.0/3cd0043ba22948b0b4c12ce7d76572c3/include", "-DNDEBUG", "-o", "build/.objs/example/linux/x86_64/release/src/shared/listener.c.o", "src/shared/listener.c"],
+  "file": "src/shared/listener.c"
+},
+{
+  "directory": "/home/dev/project/cc/libevent_http_serve",
   "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/.xmake/packages/l/libevent/2.2.6/435f6458bdb5473687630c17c24f4f21/include", "-I", "/home/dev/.xmake/packages/m/mbedtls/v3.6.0/3cd0043ba22948b0b4c12ce7d76572c3/include", "-DNDEBUG", "-o", "build/.objs/example/linux/x86_64/release/src/example.c.o", "src/example.c"],
   "file": "src/example.c"
 }]

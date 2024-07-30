@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define PPP_C_FLAGS_VERSION (1 * 1000 * 1000 + 0 * 1000 + 0)
+#define PPP_C_FLAGS_VERSION (1 * 1000 * 1000 + 0 * 1000 + 1)
 
 #ifndef PPP_C_FLAGS_DISABLE_VERIFY
 #define PPP_C_FLAGS_DISABLE_VERIFY 0
@@ -288,21 +288,21 @@ ppp_c_flags_flag_t *ppp_c_flags_add_flag(
 #define PPP_C_FLAGS_ADD_FLAG(command, name, short_name, describe, value, value_type, err, fail) \
     if (!ppp_c_flags_add_flag(command, name, short_name, describe, value, value_type, err))     \
     {                                                                                           \
-        printf("Add flags fail: --%s %s\n", name, ppp_c_flags_error(*(err)));                     \
+        printf("Add flags fail: --%s %s\n", name, ppp_c_flags_error(*(err)));                   \
         goto fail;                                                                              \
     }
 #define PPP_C_FLAGS_SET_ADD_FLAG(flag, command, name, short_name, describe, value, value_type, err, fail) \
-    falg = ppp_c_flags_add_flag(command, name, short_name, describe, value, value_type, err);             \
-    if (!falg)                                                                                            \
+    flag = ppp_c_flags_add_flag(command, name, short_name, describe, value, value_type, err);             \
+    if (!flag)                                                                                            \
     {                                                                                                     \
-        printf("Add flags fail: --%s %s\n", name, ppp_c_flags_error(*(err)));                               \
+        printf("Add flags fail: --%s %s\n", name, ppp_c_flags_error(*(err)));                             \
         goto fail;                                                                                        \
     }
 #define PPP_C_FLAGS_VAR_ADD_FLAG(flag, command, name, short_name, describe, value, value_type, err, fail)         \
-    ppp_c_flags_flag_t *falg = ppp_c_flags_add_flag(command, name, short_name, describe, value, value_type, err); \
-    if (!falg)                                                                                                    \
+    ppp_c_flags_flag_t *flag = ppp_c_flags_add_flag(command, name, short_name, describe, value, value_type, err); \
+    if (!flag)                                                                                                    \
     {                                                                                                             \
-        printf("Add flags fail: --%s %s\n", name, ppp_c_flags_error(*(err)));                                       \
+        printf("Add flags fail: --%s %s\n", name, ppp_c_flags_error(*(err)));                                     \
         goto fail;                                                                                                \
     }
 
