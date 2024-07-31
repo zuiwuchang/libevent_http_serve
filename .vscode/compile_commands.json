@@ -6,6 +6,11 @@
 },
 {
   "directory": "/home/dev/project/cc/libevent_http_serve",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/.xmake/packages/l/libevent/2.2.6/435f6458bdb5473687630c17c24f4f21/include", "-I", "/home/dev/.xmake/packages/m/mbedtls/v3.6.0/3cd0043ba22948b0b4c12ce7d76572c3/include", "-DNDEBUG", "-o", "build/.objs/example/linux/x86_64/release/src/shared/load_balancer.c.o", "src/shared/load_balancer.c"],
+  "file": "src/shared/load_balancer.c"
+},
+{
+  "directory": "/home/dev/project/cc/libevent_http_serve",
   "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/.xmake/packages/l/libevent/2.2.6/435f6458bdb5473687630c17c24f4f21/include", "-I", "/home/dev/.xmake/packages/m/mbedtls/v3.6.0/3cd0043ba22948b0b4c12ce7d76572c3/include", "-DNDEBUG", "-o", "build/.objs/example/linux/x86_64/release/src/shared/flags.c.o", "src/shared/flags.c"],
   "file": "src/shared/flags.c"
 },

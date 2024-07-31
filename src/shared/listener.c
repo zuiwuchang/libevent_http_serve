@@ -1,7 +1,7 @@
 #include "listener.h"
 #include <errno.h>
 #include <string.h>
-int libevent_http_serve_sync_listener_init(libevent_http_serve_sync_listener_t *l, libevent_http_serve_address_t *addr)
+int sync_listener_init(sync_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer)
 {
     evutil_socket_t s = socket(addr->v6 ? AF_INET6 : AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (s == -1)
@@ -21,35 +21,47 @@ int libevent_http_serve_sync_listener_init(libevent_http_serve_sync_listener_t *
         return -1;
     }
 
+    l->load_balancer = load_balancer;
     l->s = s;
-    l->v6 = addr->v6;
+    l->v6 = addr->v6 ? 1 : 0;
     l->ok = 1;
     return 0;
 }
 
-static void libevent_http_serve_sync_listener_serve_impl(libevent_http_serve_sync_listener_t *l, struct sockaddr *addr, socklen_t addr_len)
+static void sync_listener_serve_impl(sync_listener_t *l, struct sockaddr *addr, socklen_t addr_len)
 {
     evutil_socket_t s;
+    socklen_t len;
     while (l->ok)
     {
-        s = accept(l->s, addr, &addr_len);
+        len = addr_len;
+        s = accept(l->s, addr, &len);
         if (s == -1)
         {
             printf("accept fail: %d %s", errno, strerror(errno));
             continue;
         }
+        load_balancer_serve(l->load_balancer, s, addr, len);
     }
 }
-void libevent_http_serve_sync_listener_serve(libevent_http_serve_sync_listener_t *l)
+void sync_listener_serve(sync_listener_t *l)
 {
     if (l->v6)
     {
         struct sockaddr_in6 addr;
-        libevent_http_serve_sync_listener_serve_impl(l, (struct sockaddr *)&addr, sizeof(struct sockaddr_in6));
+        sync_listener_serve_impl(l, (struct sockaddr *)&addr, sizeof(struct sockaddr_in6));
     }
     else
     {
         struct sockaddr_in addr;
-        libevent_http_serve_sync_listener_serve_impl(l, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
+        sync_listener_serve_impl(l, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
     }
+}
+
+int async_listener_init(async_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer)
+{
+    return 0;
+}
+void async_listener_serve(async_listener_t *l)
+{
 }

@@ -1,16 +1,25 @@
 #ifndef LIBEVENT_HTTP_SERVE__LISTENER_H
 #define LIBEVENT_HTTP_SERVE__LISTENER_H
 
+#include "load_balancer.h"
 #include "shared.h"
 
 typedef struct
 {
+    load_balancer_t *load_balancer;
     evutil_socket_t s;
-    uint8_t v6;
-    uint8_t ok;
-} libevent_http_serve_sync_listener_t;
+    uint8_t v6 : 1;
+    uint8_t ok : 1;
+} sync_listener_t;
 
-int libevent_http_serve_sync_listener_init(libevent_http_serve_sync_listener_t *l, libevent_http_serve_address_t *addr);
-void libevent_http_serve_sync_listener_serve(libevent_http_serve_sync_listener_t *l);
+int sync_listener_init(sync_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer);
+void sync_listener_serve(sync_listener_t *l);
+
+typedef struct
+{
+    load_balancer_t *load_balancer;
+} async_listener_t;
+int async_listener_init(async_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer);
+void async_listener_serve(async_listener_t *l);
 
 #endif
