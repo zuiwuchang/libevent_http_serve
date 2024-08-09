@@ -57,11 +57,52 @@ void sync_listener_serve(sync_listener_t *l)
         sync_listener_serve_impl(l, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
     }
 }
-
+static void evconnlistener_tcp_cb(struct evconnlistener *listener, evutil_socket_t s, struct sockaddr *addr, int socklen, void *ptr)
+{
+    async_listener_t *l = ptr;
+    load_balancer_serve(l->load_balancer, s, addr, socklen);
+}
 int async_listener_init(async_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer)
 {
+    struct event_base *base = event_base_new();
+    if (!base)
+    {
+        puts("event_base_new fail");
+        return -1;
+    }
+    struct evconnlistener *listener;
+    if (addr->v6)
+    {
+        listener = evconnlistener_new_bind(
+            base,
+            evconnlistener_tcp_cb, l,
+            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE | LEV_OPT_DISABLED,
+            128,
+            (struct sockaddr *)&addr->addr6, sizeof(struct sockaddr_in6));
+    }
+    else
+    {
+        listener = evconnlistener_new_bind(
+            base,
+            evconnlistener_tcp_cb, l,
+            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE | LEV_OPT_DISABLED,
+            128,
+            (struct sockaddr *)&addr->addr, sizeof(struct sockaddr_in));
+    }
+    if (!listener)
+    {
+        printf("evconnlistener_new_bind fail: %d %s", errno, strerror(errno));
+        event_base_free(base);
+        return -1;
+    }
+
+    l->load_balancer = load_balancer;
+    l->listener = listener;
+    l->base = base;
     return 0;
 }
 void async_listener_serve(async_listener_t *l)
 {
+    evconnlistener_enable(l->listener);
+    event_base_dispatch(l->base);
 }

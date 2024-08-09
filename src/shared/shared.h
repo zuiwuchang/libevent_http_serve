@@ -23,6 +23,7 @@ typedef struct
         struct sockaddr_in6 addr6;
     };
 } shared_address_t;
+// parse [host]:port to sockaddr_in
 int parse_shared_address(const char *s, size_t s_len, shared_address_t *addr);
 
 #endif
