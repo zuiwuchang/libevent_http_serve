@@ -124,6 +124,7 @@ void libevent_http_serve_worker_destroy(worker_t *worker)
 }
 int load_balancer_init(load_balancer_t *load_balancer)
 {
+    // malloc workers memory
     size_t n = sizeof(worker_t) * load_balancer->worker;
     load_balancer->_workers = malloc(n);
     if (!load_balancer->_workers)
@@ -139,6 +140,7 @@ int load_balancer_init(load_balancer_t *load_balancer)
         return -1;
     }
 
+    // create work thread
     memset(load_balancer->_workers, 0, n);
     for (size_t i = 0; i < load_balancer->worker; i++)
     {

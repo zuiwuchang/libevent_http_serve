@@ -18,7 +18,14 @@ In order to strive for simplicity, the project only provides an http server and 
 
 The project is only to demonstrate the core code, so it is only tested under Linux. Also, only the core code is commented.
 
-# Load Balancing
+# Source structure
 
-[example_load_balancing.c](src/example_load_balancing.c) demonstrates how to use http_serve for load balancing.
+| source | note |
+|---|---|
+|   src/example.c   |   Program entry point main    |
+|   src/shared/flags.c |   Command line parsing library copied from https://github.com/zuiwuchang/c-flags  |
+|   src/shared/load_balancer.c  | Implemented simple load balancing for calling evhttp_serve  |
+|   src/shared/listener.c   |   Demonstrates how listener cooperates with load balancing    |
+|   src/shared/shared.c |   Some other helper functions |
+
 

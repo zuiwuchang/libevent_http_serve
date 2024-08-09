@@ -5,6 +5,7 @@
 
 int parse_shared_address(const char *s, size_t s_len, shared_address_t *addr)
 {
+    // must use : to separate ip and port
     size_t i = s_len - 1;
     for (; i != -1; i--)
     {
@@ -17,12 +18,15 @@ int parse_shared_address(const char *s, size_t s_len, shared_address_t *addr)
     {
         return -1;
     }
+
+    // parse port must be uint16
     uint64_t port;
     if (ppp_c_flags_parse_uint64(s + i + 1, s_len - i - 1, 10, 8 * 2, &port) || !port)
     {
         return -1;
     }
     s_len = i;
+    // ip empty string, use default.
     if (s_len == 0)
     {
         // is support ipv6
@@ -57,7 +61,7 @@ int parse_shared_address(const char *s, size_t s_len, shared_address_t *addr)
     {
         return -1;
     }
-    else if (s[0] == '[' && s[s_len - 1] == ']')
+    else if (s[0] == '[' && s[s_len - 1] == ']') // [ipv6]:port
     {
         // v6
         s_len -= 2;

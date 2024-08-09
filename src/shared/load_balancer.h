@@ -21,6 +21,7 @@ struct http_connection
     socklen_t addr_len;
 };
 
+// Worker thread
 typedef struct
 {
     size_t id;
@@ -36,12 +37,20 @@ typedef struct
 } worker_t;
 int worker_init(worker_t *worker);
 void worker_destroy(worker_t *worker);
+
+/**
+ * Provide load balancing services for new connections
+ */
 typedef struct
 {
+    // algorithm to use
     uint8_t balance;
+    // How many worker threads to create
     uint8_t worker;
 
+    // thread sync lock
     pthread_mutex_t _mutex;
+    // worker thread
     worker_t *_workers;
     uint8_t _i;
 } load_balancer_t;

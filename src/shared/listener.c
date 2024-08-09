@@ -3,12 +3,14 @@
 #include <string.h>
 int sync_listener_init(sync_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer)
 {
+    // create listener socket
     evutil_socket_t s = socket(addr->v6 ? AF_INET6 : AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (s == -1)
     {
         printf("socket fail: %d %s", errno, strerror(errno));
         return -1;
     }
+    // bind socket
     int err = addr->v6 ? bind(s, (const struct sockaddr *)&addr->addr6, sizeof(struct sockaddr_in6)) : bind(s, (const struct sockaddr *)&addr->addr, sizeof(struct sockaddr_in));
     if (err < 0)
     {
@@ -21,7 +23,9 @@ int sync_listener_init(sync_listener_t *l, shared_address_t *addr, load_balancer
         return -1;
     }
 
+    // set load balancer
     l->load_balancer = load_balancer;
+    // set other property
     l->s = s;
     l->v6 = addr->v6 ? 1 : 0;
     l->ok = 1;
@@ -41,6 +45,7 @@ static void sync_listener_serve_impl(sync_listener_t *l, struct sockaddr *addr, 
             printf("accept fail: %d %s", errno, strerror(errno));
             continue;
         }
+        // Let the load balancer handle the connection
         load_balancer_serve(l->load_balancer, s, addr, len);
     }
 }
@@ -57,19 +62,23 @@ void sync_listener_serve(sync_listener_t *l)
         sync_listener_serve_impl(l, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
     }
 }
+
 static void evconnlistener_tcp_cb(struct evconnlistener *listener, evutil_socket_t s, struct sockaddr *addr, int socklen, void *ptr)
 {
-    async_listener_t *l = ptr;
-    load_balancer_serve(l->load_balancer, s, addr, socklen);
+    // Let the load balancer handle the connection
+    load_balancer_serve(((async_listener_t *)ptr)->load_balancer, s, addr, socklen);
 }
 int async_listener_init(async_listener_t *l, shared_address_t *addr, load_balancer_t *load_balancer)
 {
+    // new libevent base, or base from ...
     struct event_base *base = event_base_new();
     if (!base)
     {
         puts("event_base_new fail");
         return -1;
     }
+
+    // create listener;
     struct evconnlistener *listener;
     if (addr->v6)
     {
@@ -96,13 +105,17 @@ int async_listener_init(async_listener_t *l, shared_address_t *addr, load_balanc
         return -1;
     }
 
+    // set load balancer
     l->load_balancer = load_balancer;
+    // set other property
     l->listener = listener;
     l->base = base;
     return 0;
 }
 void async_listener_serve(async_listener_t *l)
 {
+    // enable accept
     evconnlistener_enable(l->listener);
+    // dispatch libevent
     event_base_dispatch(l->base);
 }
