@@ -31,7 +31,7 @@ The project is only to demonstrate the core code, so it is only tested under Lin
 # bin
 
 ```
-/example  -h
+./example  -h
 libevent_http_serve example
 
 Usage:
