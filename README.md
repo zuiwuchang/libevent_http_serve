@@ -28,4 +28,23 @@ The project is only to demonstrate the core code, so it is only tested under Lin
 |   src/shared/listener.c   |   Demonstrates how listener cooperates with load balancing    |
 |   src/shared/shared.c |   Some other helper functions |
 
+# bin
 
+```
+/example  -h
+libevent_http_serve example
+
+Usage:
+  example [flags]
+
+Flags:
+  -s, --sync bool       Use synchronized listener in separate thread
+  -a, --addr string     HTTP listen address, [host]:port, exmaple [::]:80 127.0.0.1:80. <default: :9000>
+  -b, --balance uint8   Load balancing algorithm. 1(ROUND) 2(RANDOM) <default: 1>
+  -w, --worker uint8    Number of worker threads <default: 8>
+  -h, --help bool       Help for example
+```
+
+```
+curl http://127.0.0.1:9000
+```
